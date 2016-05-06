@@ -28,10 +28,10 @@
     // Do any additional setup after loading the view, typically from a nib.
     
     _contentData = [[NSMutableData alloc]init];
-    //http://test.blh.paipian.leying.com:88   预发布
+
     // 某个页面 https://test.hd.paipian.leying.com:445/
     
-    self.urlStr = [NSString stringWithFormat:@"http://test.blh.paipian.leying.com:88"];
+    self.urlStr = [NSString stringWithFormat:@"https://test.hd.paipian.leying.com:445/"];
     
     NSURL *url = [[NSURL alloc] initWithString:self.urlStr];
     _request = [NSURLRequest requestWithURL:url];
@@ -72,7 +72,7 @@
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType;
 
 {
-    NSLog(@"Did start loading: %@ auth:%d", [[request URL]absoluteString],_authenticated);
+    NSLog(@"the URL is : %@ auth:%d", [[request URL]absoluteString],_authenticated);
     
     if (!_authenticated) {
         
@@ -87,9 +87,9 @@
 }
 #pragma mark === connectDelegate
 
-- (void)connection:(NSURLConnection *)connection didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge;
+- (void)connection:(NSURLConnection *)connection didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge
 {
-    NSLog(@"WebController Got auth challange via NSURLConnection");
+    NSLog(@"验证签名证书");
     
     if ([challenge previousFailureCount] == 0)
     {
@@ -105,11 +105,12 @@
     }
 }
 
-- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response;
+- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
 {
     NSLog(@"WebController received response via NSURLConnection");
     
     // remake a webview call now that authentication has passed ok.
+    
     _authenticated = YES;
     [self.showView loadRequest:_request];
     
